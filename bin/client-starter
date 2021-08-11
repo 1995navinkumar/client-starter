@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var fs = require("fs");
+var argv = require("minimist")(process.argv.slice(2));
+var cp = require("child_process");
+
+fs.mkdirSync(argv.name);
+
+process.chdir(`${argv.name}`);
+
+var packageJSON = {
+    "name": argv.name,
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "browserify index.js -t [ envify --NODE_ENV production  ] -g babelify -g browserify-css | uglifyjs -o public/dist.js",
+        "watch": "watchify index.js -t [ envify --NODE_ENV development  ] -g babelify -g browserify-css -o public/dist.js -v",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/cli": "^7.10.5",
+        "@babel/core": "^7.10.5",
+        "@babel/plugin-transform-runtime": "^7.10.5",
+        "@babel/preset-env": "^7.10.4",
+        "babelify": "^10.0.0",
+        "browserify": "^16.5.1",
+        "browserify-css": "^0.14.0",
+        "envify": "^4.1.0",
+        "uglifyify": "^5.0.2",
+        "watchify": "^3.11.1"
+    },
+}
+
+var babelConfig = {
+    "presets": [
+        "@babel/preset-env"
+    ]
+}
+
+var indexHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./dist.js"></script>
+</head>
+<body>
+    Hello
+</body>
+</html>
+`
+
+fs.writeFileSync("package.json", JSON.stringify(packageJSON, null, 5));
+fs.writeFileSync("babel.config.json", JSON.stringify(babelConfig, null, 5));
+fs.writeFileSync(".gitignore", "node_modules");
+
+fs.mkdirSync("public");
+fs.mkdirSync("src");
+
+fs.writeFileSync("public/index.html", indexHTML);
+fs.writeFileSync("index.js", "console.log('hello')");
+
+
+
+
+
