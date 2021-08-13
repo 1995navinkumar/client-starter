@@ -6,18 +6,21 @@ var fs = require("fs");
 var argv = require("minimist")(process.argv.slice(2));
 var cp = require("child_process");
 
-fs.mkdirSync(argv.name);
+var projectName = argv._[0];
 
-process.chdir(`${argv.name}`);
+fs.mkdirSync(projectName);
+
+process.chdir(`${projectName}`);
 
 var packageJSON = {
-    "name": argv.name,
+    "name": projectName,
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
         "build": "browserify index.js -t [ envify --NODE_ENV production  ] -g babelify -g browserify-css | uglifyjs -o public/dist.js",
         "watch": "watchify index.js -t [ envify --NODE_ENV development  ] -g babelify -g browserify-css -o public/dist.js -v",
+        "serve" : "npx http-server public",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
@@ -34,6 +37,9 @@ var packageJSON = {
         "uglifyify": "^5.0.2",
         "watchify": "^3.11.1"
     },
+    "devDependencies": {
+        "http-server": "^13.0.0"
+    }
 }
 
 var babelConfig = {
