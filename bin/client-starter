@@ -35,9 +35,7 @@ var packageJSON = {
         "browserify-css": "^0.14.0",
         "envify": "^4.1.0",
         "uglifyify": "^5.0.2",
-        "watchify": "^3.11.1"
-    },
-    "devDependencies": {
+        "watchify": "^3.11.1",
         "http-server": "^13.0.0"
     }
 }
